@@ -6,7 +6,7 @@ import plotly.express as px
 from PIL import Image
 
 # Cargar la imagen
-page_icon = Image.open("G.png")
+page_icon = Image.open("favicon geoagro nuevo-13.png")
 
 st.set_page_config(
     page_title="Tablero de Rindes",
