@@ -1,12 +1,15 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime  # Import the datetime class from the datetime module
-import time
 import plotly.express as px
 from PIL import Image
+from shapely import wkt
+import geopandas as gpd
+import folium
+from folium import FeatureGroup, LayerControl
+from streamlit_folium import folium_static
 
 # Cargar la imagen
-page_icon = Image.open("favicon geoagro nuevo-13.png")
+page_icon = Image.open("pictures/favicon geoagro nuevo-13.png")
 
 st.set_page_config(
     page_title="Tablero de Rindes",
@@ -24,7 +27,6 @@ st.title('Tablero de Rindes')
 
 # Read the CSV file into a DataFrame
 filtered_df = pd.read_csv('csv_rindes.csv')
-
 
 with st.sidebar:
 
@@ -44,7 +46,6 @@ with st.sidebar:
 
     # Usa getattr para obtener la rampa de colores seleccionada
     selected_colors = getattr(px.colors.qualitative, selected_color_ramp)
-
 
     ############################################################################
     # Area
@@ -147,9 +148,9 @@ with st.sidebar:
     filtered_df = filtered_df[filtered_df['Nombre'].isin(selector_capas)]
 
     # Cargar la imagen
-    imagen = Image.open("powered_by_GeoAgro.png")
+    imagen = Image.open("pictures/Powered by GeoAgro-01.png")
     # Mostrar la imagen en la aplicación
-    st.image(imagen, use_column_width=False)
+    st.image(imagen, use_column_width=True)
 
 ############################################################################
 
@@ -158,6 +159,7 @@ if selector_capas:
     ############################################################################
     # Gráfico
     ############################################################################
+
     campos_agrupamiento = {
         'Area': 'area_name',
         'Workspace': 'workspace_name',
@@ -175,8 +177,6 @@ if selector_capas:
     # Ordenar el DataFrame primero por farm_name y luego por Rendimiento medio ajustado
     filtered_df = filtered_df.sort_values(by='Rendimiento medio ajustado', ascending=False)
 
-
-
     # Crear un gráfico de barras interactivo con Plotly
     fig = px.bar(
         filtered_df,
@@ -186,13 +186,27 @@ if selector_capas:
         title='Rendimiento medio ajustado por ' + selected_key,
         labels={'Rendimiento medio ajustado': 'Rendimiento Medio Ajustado'},
         height=500,
-        hover_data={
-            'Nombre': True,  # Mantener la etiqueta de Nombre
-            'Rendimiento medio ajustado': ':.2f',  # Formatear el rendimiento a 2 decimales
-            selected_value: True,  # Mantener la etiqueta del valor seleccionado
-        },
         color_discrete_sequence=selected_colors  # Aquí se actualiza la paleta de colores
     )
+
+    # Crear el hovertemplate personalizado
+    hovertemplate = (
+        "<b>%{x}</b><br>"
+        "Area: %{customdata[0]}<br>"
+        "WS: %{customdata[1]}<br>"
+        "Season: %{customdata[2]}<br>"
+        "Establecimiento: %{customdata[3]}<br>"
+        "Lote: %{customdata[4]}<br>"
+        "Cultivo: %{customdata[5]}<br>"
+        "Híbrido / Variedad: %{customdata[6]}<br>"
+        "Rendimiento Medio Ajustado: %{y:.2f}"
+    )
+
+    # Obtener datos personalizados para el hovertemplate
+    custom_data = filtered_df[['area_name', 'workspace_name', 'season_name', 'farm_name', 'field_name', 'crop', 'hybrid']].values
+
+    # Aplicar el hovertemplate y datos personalizados al gráfico
+    fig.update_traces(hovertemplate=hovertemplate, customdata=custom_data)
 
     # Personalizar el diseño del gráfico
     fig.update_xaxes(title_text='Capa de Rinde')
@@ -203,7 +217,6 @@ if selector_capas:
 
     # Mostrar el gráfico en Streamlit
     st.plotly_chart(fig, use_container_width=True)
-
 
     ############################################################################
     # Gráfico
@@ -232,11 +245,22 @@ if selector_capas:
         x=selected_value,
         y='Rendimiento Ponderado',
         color=selected_value,
-        title='Rendimiento Ponderado por ' + selected_key,
-        labels={'Rendimiento Ponderado': 'Rendimiento Ponderado'},
+        title=f'Rendimiento Ponderado por {selected_key}',
+        # labels={'Rendimiento Ponderado': 'Rendimiento Ponderado'},
         height=500,
         color_discrete_sequence=selected_colors  # Aquí se actualiza la paleta de colores
     )
+
+        # Crear el hovertemplate personalizado
+    hovertemplate = (
+        "Rendimiento Ponderado: %{y:.2f}"
+    )
+
+    # Obtener datos personalizados para el hovertemplate
+    custom_data = grouped[['Rendimiento Ponderado']].values
+
+    # Aplicar el hovertemplate y datos personalizados al gráfico
+    fig.update_traces(hovertemplate=hovertemplate, customdata=custom_data)
 
     # Personalizar el diseño del gráfico
     fig.update_xaxes(title_text=selected_key)
@@ -262,16 +286,8 @@ if selector_capas:
     ############################################################################
     # mapa
     ############################################################################
-    st.divider()
 
-    import streamlit as st
-    import pandas as pd
-    import plotly.express as px
-    from shapely import wkt
-    import geopandas as gpd
-    import folium
-    from folium import FeatureGroup, LayerControl
-    from streamlit_folium import folium_static
+    st.divider()
 
     # Mapear los colores del gráfico a los valores únicos de la columna de agrupamiento
     colors = selected_colors
@@ -283,7 +299,7 @@ if selector_capas:
     filtered_df['geometry'] = filtered_df['centroid'].apply(wkt.loads)
     gdf = gpd.GeoDataFrame(filtered_df, geometry='geometry')
 
-    st.caption('Mapa de puntos por capa según ' + selected_key)
+    st.markdown(f"<b>Mapa de puntos por capa según {selected_key}</b>", unsafe_allow_html=True)
 
     # Crear mapa
     m = folium.Map(location=[gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()], zoom_start=7)
@@ -301,8 +317,17 @@ if selector_capas:
             fill=True,
             fill_opacity=0.8,
             fill_color=row['color'],
-            tooltip=f"{row['Nombre']}<br>Area: {row['area_name']}<br>WS: {row['workspace_name']}<br>Season: {row['season_name']}<br>Establecimiento: {row['farm_name']}<br>Cultivo: {row['crop']}<br>Híbrido / Variedad: {row['hybrid']}<br>Rendimiento Medio Ajustado: {row['Rendimiento medio ajustado']:.2f}"
-        )
+            tooltip = (
+                f"<b>{row['Nombre']}</b><br>"
+                f"Area: {row['area_name']}<br>"
+                f"WS: {row['workspace_name']}<br>"
+                f"Season: {row['season_name']}<br>"
+                f"Establecimiento: {row['farm_name']}<br>"
+                f"Lote: {row['field_name']}<br>"
+                f"Cultivo: {row['crop']}<br>"
+                f"Híbrido / Variedad: {row['hybrid']}<br>"
+                f"Rendimiento Medio Ajustado: {row['Rendimiento medio ajustado']:.2f}"
+            ))
         marker.add_to(feature_groups[group_name])
 
     for group_name, feature_group in feature_groups.items():
@@ -319,9 +344,7 @@ if selector_capas:
 
     # m.save("map.html")
     
-    folium_static(m)
-
-
+    folium_static(m, width=800)
 
 else:
     st.warning("Debe seleccionar una capa de rindes para continuar")
