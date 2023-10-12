@@ -301,7 +301,7 @@ if selector_capas:
             fill=True,
             fill_opacity=0.8,
             fill_color=row['color'],
-            tooltip=f"{selected_key}: {group_name}<br>Nombre: {row['Nombre']}<br>Rendimiento Medio Ajustado: {row['Rendimiento medio ajustado']:.2f}"
+            tooltip=f"{row['Nombre']}<br>Area: {row['area_name']}<br>WS: {row['workspace_name']}<br>Season: {row['season_name']}<br>Establecimiento: {row['farm_name']}<br>Cultivo: {row['crop']}<br>Híbrido / Variedad: {row['hybrid']}<br>Rendimiento Medio Ajustado: {row['Rendimiento medio ajustado']:.2f}"
         )
         marker.add_to(feature_groups[group_name])
 
