@@ -7,29 +7,65 @@ import geopandas as gpd
 import folium
 from folium import FeatureGroup, LayerControl
 from streamlit_folium import folium_static
+from helper import translate
+from streamlit_option_menu import option_menu
+from streamlit_elements import elements, mui, html, sync
+from streamlit_tags import st_tags
+import extra_streamlit_components as stx
+import streamlit.components.v1 as components
+
+
+# Read the CSV file into a DataFrame
+filtered_df = pd.read_csv('csv_rindes.csv')
+user_info={'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': None, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
+
+##################### USER INFO #####################
+
+language=user_info['language']
+email=user_info['email']
+env=user_info['env']
+st.session_state['env']=env
+
+############################################################################
+# Estilo
+############################################################################
 
 # Cargar la imagen
-page_icon = Image.open("pictures/favicon geoagro nuevo-13.png")
+page_icon = Image.open("assets/favicon geoagro nuevo-13.png")
 
 st.set_page_config(
     page_title="Tablero de Rindes",
     page_icon=page_icon,
     layout="wide",
     initial_sidebar_state="expanded",
-    menu_items={
-        'Get Help': 'https://support.geoagro.com/es/',
-        'Report a bug': "https://geoagro1.atlassian.net/servicedesk/customer/portal/5",
-        'About': "Este tablero de rindes toma la metadata de las capas de las capas de rindes cargadas en 360 para generarse."
-    }
 )
 
-st.title('Tablero de Rindes')
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-# Read the CSV file into a DataFrame
-filtered_df = pd.read_csv('csv_rindes.csv')
+##################### LANGUAGE  #####################
+
+c_1,c_2,c_3=st.columns([1,5,1], gap="small")
+with c_3:   
+    try:
+        langs = ['es','en','pt']
+        if language is not None:
+            lang=st.selectbox(translate("language",language),label_visibility="hidden",options=langs, index=langs.index(language))
+        else: ## from public link
+            lang=st.selectbox(translate("es",language),label_visibility="hidden", options=langs)
+        st.session_state['lang']=lang
+    except Exception as exception:
+        lang="es"
+        st.session_state['lang']=lang
+        pass
+
+##################### Titulo / solicitado por  #####################
+
+st.subheader(translate("title",lang))
+st.markdown(f'{translate("requested_by",lang)}<a style="color:blue;font-size:18px;">{""+email+""}</a> | <a style="color:blue;font-size:16px;" target="_self" href="/"> {translate("logout",lang)}</a>', unsafe_allow_html=True)
+
 
 with st.sidebar:
-
     ############################################################################
     # Selector de color
     ############################################################################
@@ -38,11 +74,11 @@ with st.sidebar:
     color_ramps = dir(px.colors.qualitative)
     # Filtrar los elementos que no son rampas de colores
     color_ramps = [ramp for ramp in color_ramps if not ramp.startswith("__")]
-    # Encontrar el índice de 'Pastel' en la lista de rampas de colores
-    default_index = color_ramps.index('Pastel') if 'Pastel' in color_ramps else 0
+    # Encontrar el índice de 'T10' en la lista de rampas de colores
+    default_index = color_ramps.index('T10') if 'T10' in color_ramps else 0
 
     # Selector para la rampa de colores con un valor predeterminado
-    selected_color_ramp = st.selectbox('Paleta de colores', color_ramps, index=default_index)
+    selected_color_ramp = st.selectbox(translate("color_palette", lang), color_ramps, index=default_index)
 
     # Usa getattr para obtener la rampa de colores seleccionada
     selected_colors = getattr(px.colors.qualitative, selected_color_ramp)
@@ -54,9 +90,9 @@ with st.sidebar:
     areas = filtered_df['area_name'].unique()
 
     selector_areas = st.multiselect(
-        'Area',
+        translate("area", lang),
         areas,
-        placeholder='elije una opción')
+        placeholder=translate("choose_option", lang))
 
     ############################################################################
     # Workspace
@@ -64,13 +100,14 @@ with st.sidebar:
 
     # Filtra el DataFrame basado en las áreas seleccionadas
     filtered_df = filtered_df[filtered_df['area_name'].isin(selector_areas)]
+
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
     workspaces = filtered_df['workspace_name'].unique()
 
     selector_workspaces = st.multiselect(
-        'Workspace',
+        translate("workspace", lang),
         workspaces,
-        placeholder='elije una opción')
+        placeholder=translate("choose_option", lang))
 
     ############################################################################
     # Season
@@ -78,13 +115,14 @@ with st.sidebar:
 
     # Filtra el DataFrame basado en las áreas seleccionadas
     filtered_df = filtered_df[filtered_df['workspace_name'].isin(selector_workspaces)]
+
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
     seasons = filtered_df['season_name'].unique()
 
     selector_seasons = st.multiselect(
-        'Season',
+        translate("season", lang),
         seasons,
-        placeholder='elije una opción')
+        placeholder=translate("choose_option", lang))
 
     ############################################################################
     # Farm
@@ -92,13 +130,14 @@ with st.sidebar:
 
     # Filtra el DataFrame basado en las áreas seleccionadas
     filtered_df = filtered_df[filtered_df['season_name'].isin(selector_seasons)]
+
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
     farms = filtered_df['farm_name'].unique()
 
     selector_farms = st.multiselect(
-        'Farm',
+        translate("farm", lang),
         farms,
-        placeholder='elije una opción')
+        placeholder=translate("choose_option", lang))
 
     ############################################################################
     # Cultivo
@@ -106,13 +145,14 @@ with st.sidebar:
 
     # Filtra el DataFrame basado en las áreas seleccionadas
     filtered_df = filtered_df[filtered_df['farm_name'].isin(selector_farms)]
+
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
     crop = filtered_df['crop'].unique()
 
     selector_crop = st.multiselect(
-        'Cultivo',
+        translate("crop", lang),
         crop,
-        placeholder='elije una opción')
+        placeholder=translate("choose_option", lang))
 
     ############################################################################
     # Híbrido
@@ -120,14 +160,15 @@ with st.sidebar:
 
     # Filtra el DataFrame basado en las áreas seleccionadas
     filtered_df = filtered_df[filtered_df['crop'].isin(selector_crop)]
+
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
     hybridos = filtered_df['hybrid'].unique()
 
     selector_hybrid = st.multiselect(
-        'Híbrido / Variedad',
+        translate("hybrid_variety", lang),
         hybridos,
         default=hybridos,
-        placeholder='elije una opción')
+        placeholder=translate("choose_option", lang))
 
     ############################################################################
     # Capas
@@ -135,22 +176,41 @@ with st.sidebar:
 
     # Filtra el DataFrame basado en las áreas seleccionadas
     filtered_df = filtered_df[filtered_df['hybrid'].isin(selector_hybrid)]
+
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
     capas = filtered_df['Nombre'].unique()
 
     selector_capas = st.multiselect(
-        'Capas de rindes',
+        translate("yield_layers", lang),
         capas,
         default=capas,
-        placeholder='elije una opción')
+        placeholder=translate("choose_option", lang))
 
     # Filtra el DataFrame basado en las áreas seleccionadas
     filtered_df = filtered_df[filtered_df['Nombre'].isin(selector_capas)]
 
-    # Cargar la imagen
-    imagen = Image.open("pictures/Powered by GeoAgro-01.png")
-    # Mostrar la imagen en la aplicación
-    st.image(imagen, use_column_width=True)
+    st.markdown(
+        """
+        <style>
+            div [data-testid=stImage]{
+                bottom:0;
+                display: flex;
+                margin-bottom:10px;
+            }
+        </style>
+        """, unsafe_allow_html=True
+        )
+        
+    
+    cI1,cI2,cI3=st.columns([1,4,1], gap="small")
+    with cI1:
+        pass
+    with cI2:
+        image = Image.open('assets\Powered by GeoAgro-01.png')
+        new_image = image.resize((220, 35))
+        st.image(new_image)
+    with cI3:
+        pass
 
 ############################################################################
 
@@ -161,21 +221,26 @@ if selector_capas:
     ############################################################################
 
     campos_agrupamiento = {
-        'Area': 'area_name',
-        'Workspace': 'workspace_name',
-        'Farm':'farm_name',
-        'Cultivo': 'crop',
-        'Híbrido / Variedad': 'hybrid'
+        translate("area", lang): 'area_name',
+        translate("ws_field", lang): 'workspace_name',
+        translate("farm_field", lang):'farm_name',
+        translate("crop_field", lang): 'crop',
+        translate("hybrid_variety_field", lang): 'hybrid'
     }
 
+    st.markdown('')
+
     # Obtener el índice de 'Farm' en la lista de claves
-    default_index = list(campos_agrupamiento.keys()).index('Farm')
+    default_index = list(campos_agrupamiento.keys()).index(translate("farm_field", lang))
     # Selector para elegir una clave del diccionario
-    selected_key = st.selectbox('Seleccione un campo de agrupamiento:', list(campos_agrupamiento.keys()), index=default_index)
+    selected_key = st.selectbox(translate('select_grouping_field', lang), options=list(campos_agrupamiento.keys()), index=default_index)
     # Obtén el valor asociado a la clave seleccionada
     selected_value = campos_agrupamiento[selected_key]
     # Ordenar el DataFrame primero por farm_name y luego por Rendimiento medio ajustado
     filtered_df = filtered_df.sort_values(by='Rendimiento medio ajustado', ascending=False)
+
+    st.markdown('')
+    st.markdown(f"<b>{translate('adjusted_average_yield_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
 
     # Crear un gráfico de barras interactivo con Plotly
     fig = px.bar(
@@ -183,23 +248,23 @@ if selector_capas:
         x='Nombre',
         y='Rendimiento medio ajustado',
         color=selected_value,
-        title='Rendimiento medio ajustado por ' + selected_key,
-        labels={'Rendimiento medio ajustado': 'Rendimiento Medio Ajustado'},
+        # title='Rendimiento medio ajustado por ' + selected_key,
+        labels={translate("adjusted_average_yield", lang): translate("adjusted_average_yield", lang)},
         height=500,
         color_discrete_sequence=selected_colors  # Aquí se actualiza la paleta de colores
     )
 
     # Crear el hovertemplate personalizado
     hovertemplate = (
-        "<b>%{x}</b><br>"
-        "Area: %{customdata[0]}<br>"
-        "WS: %{customdata[1]}<br>"
-        "Season: %{customdata[2]}<br>"
-        "Establecimiento: %{customdata[3]}<br>"
-        "Lote: %{customdata[4]}<br>"
-        "Cultivo: %{customdata[5]}<br>"
-        "Híbrido / Variedad: %{customdata[6]}<br>"
-        "Rendimiento Medio Ajustado: %{y:.2f}"
+        f"<b>%{{x}}</b><br>"
+        f"{translate('area', lang)}: %{{customdata[0]}}<br>"
+        f"{translate('workspace', lang)}: %{{customdata[1]}}<br>"
+        f"{translate('season', lang)}: %{{customdata[2]}}<br>"
+        f"{translate('farm', lang)}: %{{customdata[3]}}<br>"
+        f"{translate('lot_field', lang)}: %{{customdata[4]}}<br>"
+        f"{translate('crop', lang)}: %{{customdata[5]}}<br>"
+        f"{translate('hybrid_variety', lang)}: %{{customdata[6]}}<br>"
+        f"{translate('adjusted_average_yield', lang)}: %{{y:.2f}}"
     )
 
     # Obtener datos personalizados para el hovertemplate
@@ -208,19 +273,37 @@ if selector_capas:
     # Aplicar el hovertemplate y datos personalizados al gráfico
     fig.update_traces(hovertemplate=hovertemplate, customdata=custom_data)
 
-    # Personalizar el diseño del gráfico
-    fig.update_xaxes(title_text='Capa de Rinde')
-    fig.update_yaxes(title_text='Rendimiento Medio Ajustado')
-    fig.update_layout(xaxis_tickangle=-45)
+    # Personalizar la fuente del hoverlabel
+    fig.update_layout(
+        hoverlabel=dict(
+            bgcolor="white", # color de fondo del hoverlabel
+            font_size=12, # tamaño de la fuente
+            font_family="Roboto" # tipo de fuente
+        )
+    )
 
-    # fig.write_html('bar_graph.html')
+    # Personalizar el tipo de fuente del gráfico
+    fig.update_layout(
+        font=dict(
+            family="Roboto",  # Cambia 'Arial' a cualquier tipo de fuente que desees usar
+            size=18,  # Cambia el tamaño de la fuente
+        )
+    )
+
+    # Personalizar el diseño del gráfico
+    fig.update_xaxes(title_text=translate("yield_layer", lang))
+    fig.update_yaxes(title_text=translate("adjusted_average_yield", lang))
+    fig.update_layout(xaxis_tickangle=-45)
 
     # Mostrar el gráfico en Streamlit
     st.plotly_chart(fig, use_container_width=True)
 
     ############################################################################
-    # Gráfico
+    # Gráfico 2
     ############################################################################
+
+    st.markdown('')
+    st.markdown(f"<b>{translate('weighted_yield_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
 
     # Obtener los nombres de los grupos en el orden del 'Rendimiento medio ajustado'
     ordered_groups = filtered_df.sort_values(
@@ -245,15 +328,14 @@ if selector_capas:
         x=selected_value,
         y='Rendimiento Ponderado',
         color=selected_value,
-        title=f'Rendimiento Ponderado por {selected_key}',
+        # title=f'Rendimiento Ponderado por {selected_key}',
         # labels={'Rendimiento Ponderado': 'Rendimiento Ponderado'},
         height=500,
         color_discrete_sequence=selected_colors  # Aquí se actualiza la paleta de colores
     )
 
-        # Crear el hovertemplate personalizado
     hovertemplate = (
-        "Rendimiento Ponderado: %{y:.2f}"
+        translate('weighted_yield', lang) + ": %{y:.2f}"
     )
 
     # Obtener datos personalizados para el hovertemplate
@@ -264,7 +346,7 @@ if selector_capas:
 
     # Personalizar el diseño del gráfico
     fig.update_xaxes(title_text=selected_key)
-    fig.update_yaxes(title_text='Rendimiento Ponderado')
+    fig.update_yaxes(title_text=translate('weighted_yield', lang))
     fig.update_layout(xaxis_tickangle=-45)
 
     # Agregar anotaciones para mostrar los valores de Y sobre cada barra
@@ -276,9 +358,26 @@ if selector_capas:
                 text=f'{val:.2f}',  # texto a mostrar (valor de la barra formateado)
                 showarrow=False,  # no mostrar flecha
                 yshift=10,  # ajustar la posición verticalmente para que no se superponga con la barra
-                # font=dict(size=15)  # tamaño de la fuente, color de la fuente, es opcional
+                font=dict(size=15)  # tamaño de la fuente, color de la fuente, es opcional
             )
         )
+
+    # Personalizar la fuente del hoverlabel
+    fig.update_layout(
+        hoverlabel=dict(
+            bgcolor="white", # color de fondo del hoverlabel
+            font_size=12, # tamaño de la fuente
+            font_family="Roboto" # tipo de fuente
+        )
+    )
+
+    # Personalizar el tipo de fuente del gráfico
+    fig.update_layout(
+        font=dict(
+            family="Roboto",  # Cambia 'Arial' a cualquier tipo de fuente que desees usar
+            size=18,  # Cambia el tamaño de la fuente
+        )
+    )
 
     # Mostrar el gráfico en Streamlit
     st.plotly_chart(fig, use_container_width=True)
@@ -286,8 +385,6 @@ if selector_capas:
     ############################################################################
     # mapa
     ############################################################################
-
-    st.divider()
 
     # Mapear los colores del gráfico a los valores únicos de la columna de agrupamiento
     colors = selected_colors
@@ -299,7 +396,8 @@ if selector_capas:
     filtered_df['geometry'] = filtered_df['centroid'].apply(wkt.loads)
     gdf = gpd.GeoDataFrame(filtered_df, geometry='geometry')
 
-    st.markdown(f"<b>Mapa de puntos por capa según {selected_key}</b>", unsafe_allow_html=True)
+    st.markdown('')
+    st.markdown(f"<b>{translate('point_map_by_layer_according_to', lang)} {selected_key}</b>", unsafe_allow_html=True)
 
     # Crear mapa
     m = folium.Map(location=[gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()], zoom_start=7)
@@ -317,17 +415,20 @@ if selector_capas:
             fill=True,
             fill_opacity=0.8,
             fill_color=row['color'],
-            tooltip = (
+            tooltip=(
+                "<span style='font-family:Roboto;'>"
                 f"<b>{row['Nombre']}</b><br>"
-                f"Area: {row['area_name']}<br>"
-                f"WS: {row['workspace_name']}<br>"
-                f"Season: {row['season_name']}<br>"
-                f"Establecimiento: {row['farm_name']}<br>"
-                f"Lote: {row['field_name']}<br>"
-                f"Cultivo: {row['crop']}<br>"
-                f"Híbrido / Variedad: {row['hybrid']}<br>"
-                f"Rendimiento Medio Ajustado: {row['Rendimiento medio ajustado']:.2f}"
-            ))
+                f"{translate('area', lang)}: {row['area_name']}<br>"
+                f"{translate('workspace', lang)}: {row['workspace_name']}<br>"
+                f"{translate('season', lang)}: {row['season_name']}<br>"
+                f"{translate('farm', lang)}: {row['farm_name']}<br>"
+                f"{translate('lot_field', lang)}: {row['field_name']}<br>"
+                f"{translate('crop', lang)}: {row['crop']}<br>"
+                f"{translate('hybrid_variety', lang)}: {row['hybrid']}<br>"
+                f"{translate('adjusted_average_yield', lang)}: {row['Rendimiento medio ajustado']:.2f}"
+                "</span>")
+            )
+        
         marker.add_to(feature_groups[group_name])
 
     for group_name, feature_group in feature_groups.items():
@@ -343,10 +444,22 @@ if selector_capas:
     LayerControl(collapsed=True).add_to(m)
 
     # m.save("map.html")
-    
+
     folium_static(m, width=800)
 
 else:
-    st.warning("Debe seleccionar una capa de rindes para continuar")
+    # Diccionario de referencia
+    messages = {
+        "select_yield_layer_warning": {
+            "es": "Debe seleccionar una capa de rindes para continuar",
+            "en": "You must select a yield layer to continue",
+            "pt": "Você deve selecionar uma camada de rendimento para continuar"
+        }
+    }
+
+    # Usar el valor de 'lang' para determinar el mensaje de advertencia
+    if lang in messages["select_yield_layer_warning"]:
+        advertencia = messages["select_yield_layer_warning"][lang]
+        st.warning(advertencia)
 
 st.caption("Powered by GeoAgro")
