@@ -448,6 +448,7 @@ if selector_capas:
     folium_static(m, width=800)
 
 else:
+    st.caption("")
     # # Diccionario de referencia
     # messages = {
     #     "select_yield_layer_warning": {
