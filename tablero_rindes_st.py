@@ -448,19 +448,18 @@ if selector_capas:
     folium_static(m, width=800)
 
 else:
-    st.caption("")
-    # # Diccionario de referencia
-    # messages = {
-    #     "select_yield_layer_warning": {
-    #         "es": "Debe seleccionar una capa de rindes para continuar",
-    #         "en": "You must select a yield layer to continue",
-    #         "pt": "Você deve selecionar uma camada de rendimento para continuar"
-    #     }
-    # }
+    # Diccionario de referencia
+    messages = {
+        "select_yield_layer_warning": {
+            "es": "Debe seleccionar una capa de rindes para continuar",
+            "en": "You must select a yield layer to continue",
+            "pt": "Você deve selecionar uma camada de rendimento para continuar"
+        }
+    }
 
-    # # Usar el valor de 'lang' para determinar el mensaje de advertencia
-    # if lang in messages["select_yield_layer_warning"]:
-    #     advertencia = messages["select_yield_layer_warning"][lang]
-    #     st.warning(advertencia)
+    # Usar el valor de 'lang' para determinar el mensaje de advertencia
+    if lang in messages["select_yield_layer_warning"]:
+        advertencia = messages["select_yield_layer_warning"][lang]
+        st.warning(advertencia)
 
 st.caption("Powered by GeoAgro")
