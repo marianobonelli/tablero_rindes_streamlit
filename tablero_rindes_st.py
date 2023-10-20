@@ -87,12 +87,21 @@ with st.sidebar:
     # Area
     ############################################################################
 
-    areas = filtered_df['area_name'].unique()
+    areas = sorted(filtered_df['area_name'].unique().tolist())
 
-    selector_areas = st.multiselect(
-        translate("area", lang),
-        areas,
-        placeholder=translate("choose_option", lang))
+    container = st.container()
+    select_all_areas = st.toggle(translate("select_all", lang), key='select_all_areas')
+
+    if select_all_areas:
+        selector_areas = container.multiselect(
+            translate("area", lang),
+            areas,
+            areas)  # Todos los workspaces están seleccionados por defecto
+    else:
+        selector_areas = container.multiselect(
+            translate("area", lang),
+            areas,
+            placeholder=translate("choose_option", lang)) 
 
     ############################################################################
     # Workspace
@@ -102,12 +111,21 @@ with st.sidebar:
     filtered_df = filtered_df[filtered_df['area_name'].isin(selector_areas)]
 
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
-    workspaces = filtered_df['workspace_name'].unique()
+    workspaces = sorted(filtered_df['workspace_name'].unique().tolist())
 
-    selector_workspaces = st.multiselect(
-        translate("workspace", lang),
-        workspaces,
-        placeholder=translate("choose_option", lang))
+    container = st.container()
+    select_all = st.toggle(translate("select_all", lang))
+
+    if select_all:
+        selector_workspaces = container.multiselect(
+            translate("workspace", lang),
+            workspaces,
+            workspaces)  # Todos los workspaces están seleccionados por defecto
+    else:
+        selector_workspaces = container.multiselect(
+            translate("workspace", lang),
+            workspaces,
+            placeholder=translate("choose_option", lang))
 
     ############################################################################
     # Season
@@ -117,12 +135,21 @@ with st.sidebar:
     filtered_df = filtered_df[filtered_df['workspace_name'].isin(selector_workspaces)]
 
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
-    seasons = filtered_df['season_name'].unique()
+    seasons = sorted(filtered_df['season_name'].unique().tolist())
 
-    selector_seasons = st.multiselect(
-        translate("season", lang),
-        seasons,
-        placeholder=translate("choose_option", lang))
+    container = st.container()
+    select_all_seasons = st.toggle(translate("select_all", lang), key='select_all_seasons')
+
+    if select_all_seasons:
+        selector_seasons = container.multiselect(
+            translate("season", lang),
+            seasons,
+            seasons)  # Todos los workspaces están seleccionados por defecto
+    else:
+        selector_seasons = container.multiselect(
+            translate("season", lang),
+            seasons,
+            placeholder=translate("choose_option", lang)) 
 
     ############################################################################
     # Farm
@@ -132,12 +159,21 @@ with st.sidebar:
     filtered_df = filtered_df[filtered_df['season_name'].isin(selector_seasons)]
 
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
-    farms = filtered_df['farm_name'].unique()
+    farms = sorted(filtered_df['farm_name'].unique().tolist())
 
-    selector_farms = st.multiselect(
-        translate("farm", lang),
-        farms,
-        placeholder=translate("choose_option", lang))
+    container = st.container()
+    select_all_farms = st.toggle(translate("select_all", lang), key='select_all_farms')
+
+    if select_all_farms:
+        selector_farms = container.multiselect(
+            translate("farm", lang),
+            farms,
+            farms)  # Todos los workspaces están seleccionados por defecto
+    else:
+        selector_farms = container.multiselect(
+            translate("farm", lang),
+            farms,
+            placeholder=translate("choose_option", lang)) 
 
     ############################################################################
     # Cultivo
@@ -147,12 +183,21 @@ with st.sidebar:
     filtered_df = filtered_df[filtered_df['farm_name'].isin(selector_farms)]
 
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
-    crop = filtered_df['crop'].unique()
+    crop = sorted(filtered_df['crop'].unique().tolist())
 
-    selector_crop = st.multiselect(
-        translate("crop", lang),
-        crop,
-        placeholder=translate("choose_option", lang))
+    container = st.container()
+    select_all_crop = st.toggle(translate("select_all", lang), key='select_all_crop')
+
+    if select_all_crop:
+        selector_crop = container.multiselect(
+            translate("crop", lang),
+            crop,
+            crop)  # Todos los workspaces están seleccionados por defecto
+    else:
+        selector_crop = container.multiselect(
+            translate("crop", lang),
+            crop,
+            placeholder=translate("choose_option", lang)) 
 
     ############################################################################
     # Híbrido
@@ -162,13 +207,21 @@ with st.sidebar:
     filtered_df = filtered_df[filtered_df['crop'].isin(selector_crop)]
 
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
-    hybridos = filtered_df['hybrid'].unique()
+    hybridos = sorted(filtered_df['hybrid'].unique().tolist())
 
-    selector_hybrid = st.multiselect(
-        translate("hybrid_variety", lang),
-        hybridos,
-        default=hybridos,
-        placeholder=translate("choose_option", lang))
+    container = st.container()
+    select_all_hybrid = st.toggle(translate("select_all", lang), key='select_all_hybrid')
+
+    if select_all_hybrid:
+        selector_hybrid = container.multiselect(
+            translate("hybrid_variety", lang),
+            hybridos,
+            hybridos)  # Todos los workspaces están seleccionados por defecto
+    else:
+        selector_hybrid = container.multiselect(
+            translate("hybrid_variety", lang),
+            hybridos,
+            placeholder=translate("choose_option", lang)) 
 
     ############################################################################
     # Capas
@@ -178,16 +231,28 @@ with st.sidebar:
     filtered_df = filtered_df[filtered_df['hybrid'].isin(selector_hybrid)]
 
     # Obtén los nombres de los workspaces únicos del DataFrame filtrado
-    capas = filtered_df['Nombre'].unique()
+    capas = sorted(filtered_df['Nombre'].unique().tolist())
 
-    selector_capas = st.multiselect(
-        translate("yield_layers", lang),
-        capas,
-        default=capas,
-        placeholder=translate("choose_option", lang))
+    container = st.container()
+    select_all_capas = st.toggle(translate("select_all", lang), key='select_all_capas')
+
+    if select_all_capas:
+        selector_capas = container.multiselect(
+            translate("yield_layers", lang),
+            capas,
+            capas)  # Todos los workspaces están seleccionados por defecto
+    else:
+        selector_capas = container.multiselect(
+            translate("yield_layers", lang),
+            capas,
+            placeholder=translate("choose_option", lang)) 
 
     # Filtra el DataFrame basado en las áreas seleccionadas
     filtered_df = filtered_df[filtered_df['Nombre'].isin(selector_capas)]
+
+    ############################################################################
+    # Powered by GeoAgro Picture
+    ############################################################################
 
     st.markdown(
         """
@@ -206,7 +271,7 @@ with st.sidebar:
     with cI1:
         pass
     with cI2:
-        image = Image.open('assets/Powered by GeoAgro-01.png')
+        image = Image.open('assets\Powered by GeoAgro-01.png')
         new_image = image.resize((220, 35))
         st.image(new_image)
     with cI3:
@@ -223,6 +288,7 @@ if selector_capas:
     campos_agrupamiento = {
         translate("area", lang): 'area_name',
         translate("ws_field", lang): 'workspace_name',
+        translate("season", lang): 'season_name',
         translate("farm_field", lang):'farm_name',
         translate("crop_field", lang): 'crop',
         translate("hybrid_variety_field", lang): 'hybrid'
@@ -261,7 +327,7 @@ if selector_capas:
         f"{translate('workspace', lang)}: %{{customdata[1]}}<br>"
         f"{translate('season', lang)}: %{{customdata[2]}}<br>"
         f"{translate('farm', lang)}: %{{customdata[3]}}<br>"
-        f"{translate('lot_field', lang)}: %{{customdata[4]}}<br>"
+        f"{translate('field', lang)}: %{{customdata[4]}}<br>"
         f"{translate('crop', lang)}: %{{customdata[5]}}<br>"
         f"{translate('hybrid_variety', lang)}: %{{customdata[6]}}<br>"
         f"{translate('adjusted_average_yield', lang)}: %{{y:.2f}}"
@@ -289,6 +355,25 @@ if selector_capas:
             size=18,  # Cambia el tamaño de la fuente
         )
     )
+    
+    import plotly.graph_objs as go
+    # Calcular el rendimiento promedio
+    average_yield = round(filtered_df['Rendimiento medio ajustado'].mean(), 2)
+
+    # Agregar una línea de rendimiento promedio al gráfico
+    line = go.Scatter(
+        x=filtered_df['Nombre'].unique(),
+        y=[average_yield] * len(filtered_df['Nombre'].unique()),
+        mode='lines',
+        name=translate('average_yield', lang),
+        line=dict(color='black', dash='solid'),  # Puedes personalizar el color y el estilo de la línea aquí
+        hovertemplate='%{y:.2f}',  # Configuración personalizada del hover
+        hoverinfo='y'  # Muestra solo el valor de y en el hover
+    )
+
+
+    # Agregar la traza de la línea al gráfico
+    fig.add_trace(line)
 
     # Personalizar el diseño del gráfico
     fig.update_xaxes(title_text=translate("yield_layer", lang))
@@ -422,7 +507,7 @@ if selector_capas:
                 f"{translate('workspace', lang)}: {row['workspace_name']}<br>"
                 f"{translate('season', lang)}: {row['season_name']}<br>"
                 f"{translate('farm', lang)}: {row['farm_name']}<br>"
-                f"{translate('lot_field', lang)}: {row['field_name']}<br>"
+                f"{translate('field', lang)}: {row['field_name']}<br>"
                 f"{translate('crop', lang)}: {row['crop']}<br>"
                 f"{translate('hybrid_variety', lang)}: {row['hybrid']}<br>"
                 f"{translate('adjusted_average_yield', lang)}: {row['Rendimiento medio ajustado']:.2f}"
@@ -446,6 +531,19 @@ if selector_capas:
     # m.save("map.html")
 
     folium_static(m, width=800)
+
+    ############################################################################
+    # descarga de csv
+    ############################################################################
+    import base64
+    # Convertir DataFrame a CSV
+    csv = filtered_df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()
+
+    # Botón de descarga
+    st.markdown(f'<a href="data:file/csv;base64,{b64}" download="mydata.csv"><button>Descargar CSV</button></a>', 
+                unsafe_allow_html=True)
+
 
 else:
     # Diccionario de referencia
