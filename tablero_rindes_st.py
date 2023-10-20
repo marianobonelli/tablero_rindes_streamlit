@@ -271,7 +271,7 @@ with st.sidebar:
     with cI1:
         pass
     with cI2:
-        image = Image.open('assets\Powered by GeoAgro-01.png')
+        image = Image.open('assets/Powered by GeoAgro-01.png')
         new_image = image.resize((220, 35))
         st.image(new_image)
     with cI3:
