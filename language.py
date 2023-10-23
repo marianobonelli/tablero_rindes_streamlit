@@ -59,6 +59,8 @@ translate_dict = {
     "adjusted_average_yield_field": {"es": "Rendimiento Medio Ajustado", "en": "Adjusted Average Yield", "pt": "Rendimento Médio Ajustado"},
 
     "select_yield_layer_warning": {"es": "Debe seleccionar una capa de rindes para continuar", "en": "You must select a yield layer to continue", "pt": "Você deve selecionar uma camada de rendimento para continuar"},
+
+    "download_csv": {"es" : "Descargar CSV", "en":"Download CSV", "pt":"Baixar CSV"},
     
 
 }
