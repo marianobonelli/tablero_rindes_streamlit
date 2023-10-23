@@ -246,14 +246,40 @@ with st.sidebar:
             placeholder=translate("choose_option", lang)) 
 
     ############################################################################
+    # Rendimiento Final
+    ############################################################################
+
+    # Crea la columna 'Rendimiento final' antes de filtrar las capas
+    filtered_df['Rendimiento final'] = filtered_df['Rendimiento medio ajustado'].fillna(filtered_df['Rendimiento medio seco'])
+
+    # Filtra las capas que tienen un valor en 'Rendimiento final'
+    filtered_df = filtered_df.dropna(subset=['Rendimiento final'])
+
+    ############################################################################
     # Capas
     ############################################################################
 
     # Filtra el DataFrame basado en las áreas seleccionadas
     filtered_df = filtered_df[filtered_df['hybrid'].isin(selector_hybrid)]
 
-    # Obtén los nombres de los workspaces únicos del DataFrame filtrado
-    capas = sorted(filtered_df['Nombre'].unique().tolist())
+    # No obtengas los nombres únicos, en su lugar, utiliza todos los nombres
+    capas = filtered_df['Nombre'].tolist()
+
+    # Diccionario para llevar un registro de los nombres de las capas y sus conteos
+    capas_count = {}
+
+    # Lista para almacenar los nombres de las capas modificados
+    capas_modificadas = []
+
+    for i, capa in enumerate(capas):
+        if capa in capas_count:
+            capas_count[capa] += 1
+            nuevo_nombre = f"{capa} ({capas_count[capa]})"
+            capas_modificadas.append(nuevo_nombre)
+            filtered_df.loc[filtered_df.index[i], 'Nombre'] = nuevo_nombre
+        else:
+            capas_count[capa] = 1
+            capas_modificadas.append(capa)
 
     container = st.container()
     select_all_capas = st.toggle(translate("select_all", lang), key='select_all_capas')
@@ -261,18 +287,13 @@ with st.sidebar:
     if select_all_capas:
         selector_capas = container.multiselect(
             translate("yield_layers", lang),
-            capas,
-            capas)  # Todos los workspaces están seleccionados por defecto
+            capas_modificadas,
+            capas_modificadas)  # Todos los workspaces están seleccionados por defecto
     else:
         selector_capas = container.multiselect(
             translate("yield_layers", lang),
-            capas,
-            placeholder=translate("choose_option", lang)) 
-
-    # Filtra el DataFrame basado en las áreas seleccionadas
-    filtered_df = filtered_df[filtered_df['Nombre'].isin(selector_capas)]
-    filtered_df['Rendimiento final'] = filtered_df['Rendimiento medio ajustado'].fillna(filtered_df['Rendimiento medio seco'])
-
+            capas_modificadas,
+            placeholder=translate("choose_option", lang))
 
     ############################################################################
     # Powered by GeoAgro Picture
@@ -515,7 +536,6 @@ if selector_capas:
     # Preparar los datos para el heatmap (una lista de listas, cada sublista contiene latitud, longitud y un valor para el heatmap)
     heat_data = [[row.geometry.y, row.geometry.x, row['Rendimiento final']] for idx, row in gdf.iterrows()] 
 
-
     for idx, row in gdf.iterrows():
         group_name = row[selected_value]
         if group_name not in feature_groups:
@@ -549,7 +569,7 @@ if selector_capas:
 
     # Agregar heatmap al mapa como un layer adicional
 
-    heatmap_feature_group = FeatureGroup(name="Heatmap", show=False)  # Creamos un nuevo FeatureGroup para el heatmap
+    heatmap_feature_group = FeatureGroup(name=translate('heatmap', lang), show=False)  # Creamos un nuevo FeatureGroup para el heatmap
     HeatMap(heat_data).add_to(heatmap_feature_group)  # Agregamos el heatmap a este FeatureGroup
     heatmap_feature_group.add_to(m)  # Agregamos el FeatureGroup al mapa
 

@@ -61,6 +61,8 @@ translate_dict = {
     "select_yield_layer_warning": {"es": "Debe seleccionar una capa de rindes para continuar", "en": "You must select a yield layer to continue", "pt": "Você deve selecionar uma camada de rendimento para continuar"},
 
     "download_csv": {"es" : "Descargar CSV", "en":"Download CSV", "pt":"Baixar CSV"},
+
+    "heatmap": {"es": "Heatmap por rendimiento", "en": "Heatmap by Yield", "pt": "Heatmap por rendimento"},
     
 
 }
