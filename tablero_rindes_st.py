@@ -1,30 +1,43 @@
-import streamlit as st
+# Importar bibliotecas para manipulación de datos
 import pandas as pd
-import plotly.express as px
-from PIL import Image
-from shapely import wkt
 import geopandas as gpd
+from shapely import wkt
+
+# Importar bibliotecas para visualización
+import plotly.express as px
+import plotly.graph_objs as go
 import folium
 from folium import FeatureGroup, LayerControl
+from folium.plugins import HeatMap
+
+# Importar bibliotecas para integración web y Streamlit
+import streamlit as st
 from streamlit_folium import folium_static
+
+# Importar bibliotecas para manejo de imágenes
+from PIL import Image
+
+# Importar módulos o paquetes locales
 from helper import translate
-from streamlit_option_menu import option_menu
-from streamlit_elements import elements, mui, html, sync
-from streamlit_tags import st_tags
-import extra_streamlit_components as stx
-import streamlit.components.v1 as components
+
+# from streamlit_option_menu import option_menu
+# from streamlit_elements import elements, mui, html, sync
+# from streamlit_tags import st_tags
+# import extra_streamlit_components as stx
+# import streamlit.components.v1 as components
 
 
 # Read the CSV file into a DataFrame
 filtered_df = pd.read_csv('csv_rindes.csv')
-user_info={'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': None, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
+user_info = {'email': "mbonelli@geoagro.com", 'language': 'es', 'env': 'prod', 'domainId': None, 'areaId': None, 'workspaceId': None, 'seasonId': None, 'farmId': None}
+marca_blanca = 'assets/prodas.png'
 
 ##################### USER INFO #####################
 
-language=user_info['language']
-email=user_info['email']
-env=user_info['env']
-st.session_state['env']=env
+language = user_info['language']
+email = user_info['email']
+env = user_info['env']
+st.session_state['env'] = env
 
 ############################################################################
 # Estilo
@@ -45,23 +58,32 @@ with open('style.css') as f:
 
 ##################### LANGUAGE  #####################
 
-c_1,c_2,c_3=st.columns([1,5,1], gap="small")
+c_1, c_2, c_3 = st.columns([1.5, 4.5, 1], gap="small")
+
+with c_1:
+    image_mb = Image.open(marca_blanca)
+    # image_mb = image_mb.resize((220, 35))
+    st.image(image_mb)
+
 with c_3:   
     try:
-        langs = ['es','en','pt']
+        langs = ['es', 'en', 'pt']
         if language is not None:
-            lang=st.selectbox(translate("language",language),label_visibility="hidden",options=langs, index=langs.index(language))
-        else: ## from public link
-            lang=st.selectbox(translate("es",language),label_visibility="hidden", options=langs)
-        st.session_state['lang']=lang
+            lang = st.selectbox(translate("language", language), label_visibility="hidden", options=langs, index=langs.index(language))
+        else:  # from public link
+            lang = st.selectbox(translate("es", language), label_visibility="hidden", options=langs)
+        
+        st.session_state['lang'] = lang
     except Exception as exception:
-        lang="es"
-        st.session_state['lang']=lang
+        lang = "es"
+        st.session_state['lang'] = lang
         pass
+
+
 
 ##################### Titulo / solicitado por  #####################
 
-st.subheader(translate("title",lang))
+st.subheader(translate("title",lang), anchor=False)
 st.markdown(f'{translate("requested_by",lang)}<a style="color:blue;font-size:18px;">{""+email+""}</a> | <a style="color:blue;font-size:16px;" target="_self" href="/"> {translate("logout",lang)}</a>', unsafe_allow_html=True)
 
 
@@ -249,6 +271,8 @@ with st.sidebar:
 
     # Filtra el DataFrame basado en las áreas seleccionadas
     filtered_df = filtered_df[filtered_df['Nombre'].isin(selector_capas)]
+    filtered_df['Rendimiento final'] = filtered_df['Rendimiento medio ajustado'].fillna(filtered_df['Rendimiento medio seco'])
+
 
     ############################################################################
     # Powered by GeoAgro Picture
@@ -271,7 +295,7 @@ with st.sidebar:
     with cI1:
         pass
     with cI2:
-        image = Image.open('assets/Powered by GeoAgro-01.png')
+        image = Image.open('assets\Powered by GeoAgro-01.png')
         new_image = image.resize((220, 35))
         st.image(new_image)
     with cI3:
@@ -303,7 +327,7 @@ if selector_capas:
     # Obtén el valor asociado a la clave seleccionada
     selected_value = campos_agrupamiento[selected_key]
     # Ordenar el DataFrame primero por farm_name y luego por Rendimiento medio ajustado
-    filtered_df = filtered_df.sort_values(by='Rendimiento medio ajustado', ascending=False)
+    filtered_df = filtered_df.sort_values(by='Rendimiento final', ascending=False)
 
     st.markdown('')
     st.markdown(f"<b>{translate('adjusted_average_yield_by', lang)} {selected_key}</b>", unsafe_allow_html=True)
@@ -312,7 +336,7 @@ if selector_capas:
     fig = px.bar(
         filtered_df,
         x='Nombre',
-        y='Rendimiento medio ajustado',
+        y='Rendimiento final',
         color=selected_value,
         # title='Rendimiento medio ajustado por ' + selected_key,
         labels={translate("adjusted_average_yield", lang): translate("adjusted_average_yield", lang)},
@@ -356,9 +380,9 @@ if selector_capas:
         )
     )
     
-    import plotly.graph_objs as go
+
     # Calcular el rendimiento promedio
-    average_yield = round(filtered_df['Rendimiento medio ajustado'].mean(), 2)
+    average_yield = round(filtered_df['Rendimiento final'].mean(), 2)
 
     # Agregar una línea de rendimiento promedio al gráfico
     line = go.Scatter(
@@ -392,7 +416,7 @@ if selector_capas:
 
     # Obtener los nombres de los grupos en el orden del 'Rendimiento medio ajustado'
     ordered_groups = filtered_df.sort_values(
-        by='Rendimiento medio ajustado', ascending=False
+        by='Rendimiento final', ascending=False
     )[selected_value].unique()
 
     # Agrupa por el valor seleccionado y calcula el rendimiento ponderado para cada grupo
@@ -488,6 +512,10 @@ if selector_capas:
     m = folium.Map(location=[gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()], zoom_start=7)
     feature_groups = {}
 
+    # Preparar los datos para el heatmap (una lista de listas, cada sublista contiene latitud, longitud y un valor para el heatmap)
+    heat_data = [[row.geometry.y, row.geometry.x, row['Rendimiento final']] for idx, row in gdf.iterrows()] 
+
+
     for idx, row in gdf.iterrows():
         group_name = row[selected_value]
         if group_name not in feature_groups:
@@ -510,7 +538,7 @@ if selector_capas:
                 f"{translate('field', lang)}: {row['field_name']}<br>"
                 f"{translate('crop', lang)}: {row['crop']}<br>"
                 f"{translate('hybrid_variety', lang)}: {row['hybrid']}<br>"
-                f"{translate('adjusted_average_yield', lang)}: {row['Rendimiento medio ajustado']:.2f}"
+                f"{translate('adjusted_average_yield', lang)}: {row['Rendimiento final']:.2f}"
                 "</span>")
             )
         
@@ -518,6 +546,12 @@ if selector_capas:
 
     for group_name, feature_group in feature_groups.items():
         feature_group.add_to(m)
+
+    # Agregar heatmap al mapa como un layer adicional
+
+    heatmap_feature_group = FeatureGroup(name="Heatmap", show=False)  # Creamos un nuevo FeatureGroup para el heatmap
+    HeatMap(heat_data).add_to(heatmap_feature_group)  # Agregamos el heatmap a este FeatureGroup
+    heatmap_feature_group.add_to(m)  # Agregamos el FeatureGroup al mapa
 
     # Agrega la capa de teselas de Esri World Imagery
     tiles = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' 
@@ -530,20 +564,25 @@ if selector_capas:
 
     # m.save("map.html")
 
-    folium_static(m, width=800)
+    folium_static(m, width=850)
 
     ############################################################################
     # descarga de csv
     ############################################################################
-    import base64
     # Convertir DataFrame a CSV
     csv = filtered_df.to_csv(index=False)
-    b64 = base64.b64encode(csv.encode()).decode()
+    
+    st.download_button(
+        label=translate('download_csv', lang),
+        data=csv,
+        file_name=translate('title', lang) + ".csv",
+        mime='text/csv',
+    )
 
-    # Botón de descarga
-    st.markdown(f'<a href="data:file/csv;base64,{b64}" download="mydata.csv"><button>Descargar CSV</button></a>', 
-                unsafe_allow_html=True)
 
+############################################################################
+# advertencia
+############################################################################
 
 else:
     # Diccionario de referencia
