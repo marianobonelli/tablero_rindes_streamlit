@@ -590,11 +590,11 @@ if selector_capas:
     # descarga de csv
     ############################################################################
     # Convertir DataFrame a CSV
-    csv = filtered_df.to_csv(index=False)
-    
+    # csv = filtered_df.to_csv(index=False)
+
     st.download_button(
         label=translate('download_csv', lang),
-        data=csv,
+        data=marca_blanca,
         file_name=translate('title', lang) + ".csv",
         mime='text/csv',
     )
