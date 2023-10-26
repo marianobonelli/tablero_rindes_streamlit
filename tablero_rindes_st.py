@@ -92,20 +92,18 @@ with st.sidebar:
     # Selector de color
     ############################################################################
 
-    # # Obtener la lista de rampas de colores cualitativos
-    # color_ramps = dir(px.colors.qualitative)
-    # # Filtrar los elementos que no son rampas de colores
-    # color_ramps = [ramp for ramp in color_ramps if not ramp.startswith("__")]
-    # # Encontrar el índice de 'T10' en la lista de rampas de colores
-    # default_index = color_ramps.index('T10') if 'T10' in color_ramps else 0
+    # Obtener la lista de rampas de colores cualitativos
+    color_ramps = dir(px.colors.qualitative)
+    # Filtrar los elementos que no son rampas de colores
+    color_ramps = [ramp for ramp in color_ramps if not ramp.startswith("__")]
+    # Encontrar el índice de 'T10' en la lista de rampas de colores
+    default_index = color_ramps.index('T10') if 'T10' in color_ramps else 0
 
-    # # Selector para la rampa de colores con un valor predeterminado
-    # selected_color_ramp = st.selectbox(translate("color_palette", lang), color_ramps, index=default_index)
+    # Selector para la rampa de colores con un valor predeterminado
+    selected_color_ramp = st.selectbox(translate("color_palette", lang), color_ramps, index=default_index)
 
-    # # Usa getattr para obtener la rampa de colores seleccionada
-    # selected_colors = getattr(px.colors.qualitative, selected_color_ramp)
-
-    selected_colors = 'T10'
+    # Usa getattr para obtener la rampa de colores seleccionada
+    selected_colors = getattr(px.colors.qualitative, selected_color_ramp)
 
     ############################################################################
     # Area
