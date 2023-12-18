@@ -1,68 +1,35 @@
 translate_dict = {
-    # Traducciones Título
-    "title":{"es": "Tablero de Rindes", "en": "Yield Dashboard", "pt": "Painel de Rendimento"},
-    "requested_by": {"es": "Solicitado por: ", "en": "Requested by: ", "pt": "Solicitado por: "},
-    "logout": {"es": "Cerrar Sesión", "en": "Logout", "pt": "Sair"},
-    "language": {"es": "Idioma", "en": "Language", "pt": "Idioma"},
-    "select_all": {"es": "Seleccionar todo", "en": "Select all", "pt": "Selecionar tudo"},
-
-    # Traducciones Selector de color
-    "color_palette": {"es": "Paleta de colores", "en": "Color Palette", "pt": "Paleta de Cores"},
-
-    # Traducciones Area
-    "area": {"es": "Área", "en": "Area", "pt": "Área"},
-    "choose_option": {"es": "Elije una opción", "en": "Choose an option", "pt": "Escolha uma opção"},
-
-    # Traducciones Workspace
-    "workspace": {"es": "Espacio de Trabajo", "en": "Work Space", "pt": "Espaço de Trabalho"},  
-
-    # Traducciones Season
-    "season": {"es": "Campaña", "en": "Season", "pt": "Temporada"},
-
-    # Traducciones Farm
-    "farm": {"es": "Establecimiento", "en": "Farm", "pt": "Fazenda"},
-
-    # Traducciones Field
-    "field": {"es": "Lote", "en": "Field", "pt": "Campo"},
-
-    # Traducciones Cultivo
-    "crop": {"es": "Cultivo", "en": "Crop", "pt": "Cultivo"},
-
-    # Traducciones Híbrido
-    "hybrid_variety": {"es": "Híbrido / Variedad", "en": "Hybrid / Variety", "pt": "Híbrido / Variedade"},
-
-    # Traducciones Capas
-    "yield_layers": {"es": "Capas de rindes", "en": "Yield Layers", "pt": "Camadas de Rendimento"},
-
-    # Traducciones Gráfico
-    "select_grouping_field": {"es": "Seleccione un campo de agrupamiento:", "en": "Select a grouping field:", "pt": "Selecione um campo de agrupamento:"},
-    "adjusted_average_yield_by": {"es": "Rendimiento medio ajustado por", "en": "Adjusted Average Yield by", "pt": "Rendimento Médio Ajustado por"},
-    "yield_layer": {"es": "Capa de Rinde", "en": "Yield Layer", "pt": "Camada de Rendimento"},
-    "adjusted_average_yield": {"es": "Rendimiento Medio Ajustado", "en": "Adjusted Average Yield", "pt": "Rendimento Médio Ajustado"},
-    "average_yield" : {"es": "Rendimiento Medio", "en": "Average Yield", "pt": "Rendimento Médio"},
-
-    # Traducciones Gráfico 2
-    "weighted_yield_by": {"es": "Rendimiento Ponderado por", "en": "Weighted Yield by", "pt": "Rendimento Ponderado por"},
-    "weighted_yield": {"es": "Rendimiento Ponderado", "en": "Weighted Yield", "pt": "Rendimento Ponderado"},
-
-    # Traducciones mapa
-    "point_map_by_layer_according_to": {"es": "Mapa de puntos por capa según", "en": "Point Map by Layer According to", "pt": "Mapa de Pontos por Camada Segundo"},
-        
-    # Campos
-    "area_field": {"es": "Área", "en": "Area", "pt": "Área"},
-    "ws_field": {"es": "Espacio de Trabajo", "en": "Work Space", "pt": "Espaço de Trabalho"}, 
-    "season_field": {"es": "Temporada", "en": "Season", "pt": "Temporada"},
-    "farm_field": {"es": "Establecimiento", "en": "Farm", "pt": "Estabelecimento"},
-
-    "crop_field": {"es": "Cultivo", "en": "Crop", "pt": "Cultivo"},
-    "hybrid_variety_field": {"es": "Híbrido / Variedad", "en": "Hybrid / Variety", "pt": "Híbrido / Variedade"},
-    "adjusted_average_yield_field": {"es": "Rendimiento Medio Ajustado", "en": "Adjusted Average Yield", "pt": "Rendimento Médio Ajustado"},
-
-    "select_yield_layer_warning": {"es": "Debe seleccionar una capa de rindes para continuar", "en": "You must select a yield layer to continue", "pt": "Você deve selecionar uma camada de rendimento para continuar"},
-
-    "download_csv": {"es" : "Descargar CSV", "en":"Download CSV", "pt":"Baixar CSV"},
-
-    "heatmap": {"es": "Heatmap por rendimiento", "en": "Heatmap by Yield", "pt": "Heatmap por rendimento"},
-    
-
+    "adjusted_average_yield": {"en": "Adjusted Average Yield", "es": "Rendimiento Medio Ajustado", "pt": "Rendimento Médio Ajustado"},
+    "adjusted_average_yield_by": {"en": "Adjusted Average Yield by", "es": "Rendimiento medio ajustado por", "pt": "Rendimento Médio Ajustado por"},
+    "adjusted_average_yield_field": {"en": "Adjusted Average Yield", "es": "Rendimiento Medio Ajustado", "pt": "Rendimento Médio Ajustado"},
+    "area": {"en": "Area", "es": "Área", "pt": "Área"},
+    "area_field": {"en": "Area", "es": "Área", "pt": "Área"},
+    "average_yield": {"en": "Average Yield", "es": "Rendimiento Medio", "pt": "Rendimento Médio"},
+    "choose_option": {"en": "Choose an option", "es": "Elije una opción", "pt": "Escolha uma opção"},
+    "color_palette": {"en": "Color Palette", "es": "Paleta de colores", "pt": "Paleta de Cores"},
+    "crop": {"en": "Crop", "es": "Cultivo", "pt": "Cultivo"},
+    "crop_field": {"en": "Crop", "es": "Cultivo", "pt": "Cultivo"},
+    "download_csv": {"en": "Download CSV", "es": "Descargar CSV", "pt": "Baixar CSV"},
+    "farm": {"en": "Farm", "es": "Establecimiento", "pt": "Fazenda"},
+    "farm_field": {"en": "Farm", "es": "Establecimiento", "pt": "Estabelecimento"},
+    "field": {"en": "Field", "es": "Lote", "pt": "Campo"},
+    "heatmap": {"en": "Heatmap by Yield", "es": "Heatmap por rendimiento", "pt": "Heatmap por rendimento"},
+    "hybrid_variety": {"en": "Hybrid / Variety", "es": "Híbrido / Variedad", "pt": "Híbrido / Variedade"},
+    "hybrid_variety_field": {"en": "Hybrid / Variety", "es": "Híbrido / Variedad", "pt": "Híbrido / Variedade"},
+    "language": {"en": "Language", "es": "Idioma", "pt": "Idioma"},
+    "logout": {"en": "Logout", "es": "Cerrar Sesión", "pt": "Sair"},
+    "point_map_by_layer_according_to": {"en": "Point Map by Layer According to", "es": "Mapa de puntos por capa según", "pt": "Mapa de Pontos por Camada Segundo"},
+    "requested_by": {"en": "Requested by: ", "es": "Solicitado por: ", "pt": "Solicitado por: "},
+    "season": {"en": "Season", "es": "Campaña", "pt": "Temporada"},
+    "season_field": {"en": "Season", "es": "Temporada", "pt": "Temporada"},
+    "select_all": {"en": "Select all", "es": "Seleccionar todo", "pt": "Selecionar tudo"},
+    "select_grouping_field": {"en": "Select a grouping field:", "es": "Seleccione un campo de agrupamiento:", "pt": "Selecione um campo de agrupamento:"},
+    "select_yield_layer_warning": {"en": "You must select a yield layer to continue", "es": "Debe seleccionar una capa de rindes para continuar", "pt": "Você deve selecionar uma camada de rendimento para continuar"},
+    "title": {"en": "Yield Dashboard", "es": "Tablero de Rindes", "pt": "Painel de Rendimento"},
+    "weighted_yield": {"en": "Weighted Yield", "es": "Rendimiento Ponderado", "pt": "Rendimento Ponderado"},
+    "weighted_yield_by": {"en": "Weighted Yield by", "es": "Rendimiento Ponderado por", "pt": "Rendimento Ponderado por"},
+    "workspace": {"en": "Work Space", "es": "Espacio de Trabajo", "pt": "Espaço de Trabalho"},
+    "ws_field": {"en": "Work Space", "es": "Espacio de Trabajo", "pt": "Espaço de Trabalho"}, 
+    "yield_layer": {"en": "Yield Layer", "es": "Capa de Rinde", "pt": "Camada de Rendimento"},
+    "yield_layers": {"en": "Yield Layers", "es": "Capas de rindes", "pt": "Camadas de Rendimento"}
 }
