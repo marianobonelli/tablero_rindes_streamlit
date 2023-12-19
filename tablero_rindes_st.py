@@ -332,17 +332,17 @@ if selector_capas:
 
     campos_agrupamiento = {
         translate("area", lang): 'area_name',
-        translate("ws_field", lang): 'workspace_name',
+        translate("workspace", lang): 'workspace_name',
         translate("season", lang): 'season_name',
-        translate("farm_field", lang):'farm_name',
-        translate("crop_field", lang): 'crop',
-        translate("hybrid_variety_field", lang): 'hybrid'
+        translate("farm", lang):'farm_name',
+        translate("crop", lang): 'crop',
+        translate("hybrid_variety", lang): 'hybrid'
     }
 
     st.markdown('')
 
     # Obtener el índice de 'Farm' en la lista de claves
-    default_index = list(campos_agrupamiento.keys()).index(translate("farm_field", lang))
+    default_index = list(campos_agrupamiento.keys()).index(translate("farm", lang))
     # Selector para elegir una clave del diccionario
     selected_key = st.selectbox(translate('select_grouping_field', lang), options=list(campos_agrupamiento.keys()), index=default_index)
     # Obtén el valor asociado a la clave seleccionada
