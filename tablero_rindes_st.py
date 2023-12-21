@@ -12,7 +12,7 @@ from folium.plugins import HeatMap
 
 # Importar bibliotecas para integración web y Streamlit
 import streamlit as st
-from streamlit_folium import folium_static
+from streamlit_folium import st_folium
 
 # Importar bibliotecas para manejo de imágenes
 from PIL import Image
@@ -584,7 +584,7 @@ if selector_capas:
 
     # m.save("map.html")
 
-    folium_static(m, width=850)
+    st_folium(m, use_container_width=True)
 
     ############################################################################
     # descarga de csv
