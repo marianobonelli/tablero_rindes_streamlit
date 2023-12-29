@@ -165,8 +165,8 @@ Run:
 <!-- ROADMAP AND RELATED DOCUMENTATION -->
 ## Roadmap and Related documentation
 
-<a href="https://docs.google.com/document/d/19VhJlm70Q17YGFvpXy7lmjpxVoGL94f7krxuTHCWmGE/edit?usp=sharing">
-  Tablero de Lotes y Cultivos
+<a href="https://docs.google.com/document/d/1FcV2YVjS7BQrbmubMZkmucGF6Dl5oA27S97vVM26efQ/edit?usp=sharing">
+  Tablero de Rindes
 </a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
