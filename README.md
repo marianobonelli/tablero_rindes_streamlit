@@ -14,7 +14,7 @@
   <p align="center">
       This microservice generates a summary dashboard of yield data uploaded to 360, developed with Streamlit and Python <br />
     <br />
-    <a href="https://tablerolotesapp.streamlit.app/">Try Demo App</a>
+    <a href="https://tablerorindesapp.streamlit.app/">Try Demo App</a>
     ·
     <a href="https://geoagro1.atlassian.net/servicedesk/customer/portal/5">Report Bug</a>
     ·
@@ -53,57 +53,36 @@
 
 ## About the Project
 
-This microservice generates a summary dashboard of Fields and Crops data uploaded to 360, based on the selected Domain, Area(s), Workspace(s), Season(s), and Farm(s), Crop(s) and Hybrids / Varieties.
+This microservice generates a summary dashboard of Fields and Crops data uploaded to 360, based on the selected Domain, Area(s), Workspace(s), Season(s), and Farm(s), Crop(s), Hybrid(s)/Variety(ies) and Yield Layer(s).
 
 [![Product Name Screen Shot][product-screenshot]](assets/Tablero.png)
 
 ### 1. Filters (Sidebar):
-Users can filter data according to Domain, Area(s), Workspace(s), Season(s), Farm(s), Crop(s), and Hybrid(s)/Variety(ies). An option to "select all" is available for all categories. By default, all Crops and Hybrids/Varieties are pre-selected. Additionally, the sidebar includes a color palette selector for use in the charts.
+Users can filter data according to Domain, Area(s), Workspace(s), Season(s), Farm(s), Crop(s), Hybrid(s)/Variety(ies) and Yield Layer(s). An option to "select all" is available for all categories. Additionally, the sidebar includes a color palette selector for use in the charts.
 
 ### 2. Upper Section:
 This section includes the Domain logo, the dashboard title, a language selector, and user information.
 
 ### 3. Metrics:
-Located below the Upper Section, this section displays metrics relevant to the selected filters, such as:
-
-* Farms
-* Field
-* Hectares
-* Crops
-* Hybrids / Varieties
-* Fields without crops
-* Fields without hybrids/varieties
-* Fields without sowing date
+Coming soon. 
 
 ### 4. Charts and Maps:
 
 #### Sub Filters:
 
-Users can group information according to Area, Workspace, Season, Farm, Crop, and Hybrid/Variety. This grouping will be the basis for visualizations in the following charts. Additionally, they can filter data by sowing date and choose to include, exclude, or only display data from fields that do not have a sowing date.
+Users can group information according to Area, Workspace, Season, Farm, Crop, and Hybrid/Variety. This grouping will be the basis for visualizations in the following charts. 
 
-#### Pie Chart:
+#### Bar Chart 1 - Adjusted Average Yield by Farm:
 
-This displays the percentage relationship of the unique values in the selected grouping field. It includes a side slider that allows rotating the pie chart to enhance the visualization of the labels.
+Displays a bar chart for each layer of yields, grouped according to the previously selected grouping value. The bars are ordered from highest to lowest yield.
 
-#### Bar Chart:
+#### Bar Chart 2 - Weighted Yield by Farm:
 
-Displays the hectares corresponding to the unique values of the selected grouping field.
+Shows a bar chart with the weighted average yield value for each unique value of the selected grouping field. It maintains the same order as the previous chart.
 
 #### Map:
 
-Displays the location of the fields that make up the selection, with symbols representing the unique values of the selected grouping field.
-
-#### Sowing date Charts:
-
-Displays the sowing dates for each unique value of the selected grouping field. It consists of two tabs.
-
-#### Sowing date and seeding progress:
-
-The first tab, consisting of two charts. The first chart shows the sowing dates for each unique value of the selected grouping field. The second chart displays the percentage of hectares sown, calculated as the hectares from the filter with an assigned sowing date divided by the total hectares in the filter.
-
-#### Hectares by sowing date:
-
-The second tab, allowing selection within the unique values of the grouping field to visualize in a bar chart the hectares sown per day, and in a line and dot chart the cumulative hectares. Additionally, it displays a metric showing the sowing progress for that selection.
+Displays the centroid of each yield layer, grouped according to the selected grouping field. They maintain the same order and symbolism as the previous charts. Additionally, it is possible to change the background map and view a heatmap generated from the yield values of each layer.
 
 ### 5. Download:
 
@@ -156,7 +135,7 @@ To get a local copy up and running follow these simple example steps.
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/marianobonelli/tablero_lotes_streamlit.git
+   git clone https://github.com/marianobonelli/tablero_rindes_streamlit.git
    ```
 2. Install dependencies
    ```sh
@@ -164,7 +143,7 @@ To get a local copy up and running follow these simple example steps.
    ```
 3. Execute
    ```sh
-     streamlit python3 tablero_lotes_st.py 
+     streamlit python3 tablero_rindes_st.py 
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
